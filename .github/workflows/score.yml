@@ -1,0 +1,46 @@
+name: weekly live scoring
+
+on:
+  schedule:
+    - cron: "40 3 * * 1"        # Mondays 03:40 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-log
+  cancel-in-progress: false
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: shashwatsrv/weather-forecasting-patna
+          ref: eb987d58c93e05e47b26eb1a40fdd273659537be
+          path: project
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-live.txt
+      - run: pip install -r requirements-live.txt
+      - name: Score the log against ERA5
+        working-directory: project
+        env:
+          WEATHER_DATA_DIR: ${{ github.workspace }}/data
+        run: python -m src.live.score_live
+      - name: Commit scores
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/live
+          if ! git diff --cached --quiet; then
+            git commit -m "Score live forecasts $(date -u +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
