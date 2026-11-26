@@ -2,7 +2,7 @@
 
 An automated, prospective test of the frozen forecasting models from [weather-forecasting-patna](https://github.com/shashwatsrv/weather-forecasting-patna).
 
-Every hour, a GitHub Actions workflow runs the frozen LightGBM models for the ERA5 grid cell at 25.5°N, 85.25°E (about 15 km from central Patna). It logs their 1h, 6h and 24h forecasts of temperature and rain, along with:
+Every hour, a GitHub Actions workflow (scheduled every 15 minutes, because GitHub often drops scheduled runs; only the first successful run in each hour logs anything) runs the frozen LightGBM models for the ERA5 grid cell at 25.5°N, 85.25°E (about 15 km from central Patna). It logs their 1h, 6h and 24h forecasts of temperature and rain, along with:
 - the best simple baselines,
 - the ECMWF IFS and GFS forecasts for the same hours, as issued at that moment.
 
