@@ -2,7 +2,7 @@
 
 An automated, prospective test of the frozen forecasting models from [weather-forecasting-patna](https://github.com/shashwatsrv/weather-forecasting-patna).
 
-Every hour, a GitHub Actions workflow (scheduled every 15 minutes, because GitHub often drops scheduled runs; only the first successful run in each hour logs anything) runs the frozen LightGBM models for the ERA5 grid cell at 25.5°N, 85.25°E (about 15 km from central Patna). It logs their 1h, 6h and 24h forecasts of temperature and rain, along with:
+Every hour, a GitHub Actions workflow runs the frozen LightGBM models for the ERA5 grid cell at 25.5°N, 85.25°E (about 15 km from central Patna). It logs their 1h, 6h and 24h forecasts of temperature and rain, along with:
 - the best simple baselines,
 - the ECMWF IFS and GFS forecasts for the same hours, as issued at that moment.
 
@@ -25,7 +25,8 @@ Once a week the log is scored against ERA5, which is published about 5 days behi
 - **Comparing like with like:** the models were trained on ERA5. Live, their inputs come from the ECMWF IFS feed for the same grid cell, because ERA5 isn't available in real time. Expect live skill to be lower than in the backtest.
 - **IFS has an advantage:** it comes from the same model family as ERA5, the data the scores are measured against.
 - **Rain scoring for the weather services:** their rain is a single amount, not a probability, so their Brier score treats a forecast of at least 0.1 mm as 1 and anything less as 0.
-- **Gaps are normal:** GitHub's scheduler sometimes starts runs late or skips them. Every forecast is scored on the same hours.
+- **How runs are started:** an external scheduler (cron-job.org) starts the workflow every hour at about :30 UTC through GitHub's API, using a token that can only start this repo's workflows. GitHub's own schedule (every 15 minutes) stays on as a backup. It's unreliable for a small repo: on the first two days it started only 4 of about 90 tries. Only the first successful run in each hour logs a forecast, so extra runs log nothing.
+- **Gaps:** the hours before 27 November 2026 10:00 UTC have big gaps (7 of 48 covered). An hour that is missed stays missing, because a forecast can't be logged after the fact. Every forecast is scored on the same hours.
 - **Pinned code:** the workflow runs the main project's code at commit `eb987d5`, so the live test always uses the frozen code.
 
 ## Data and attribution
