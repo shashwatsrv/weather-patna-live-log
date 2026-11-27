@@ -18,6 +18,7 @@ Once a week the log is scored against ERA5, which is published about 5 days behi
   - `ecmwf_ifs025_*`, `gfs_seamless_*`: the weather-service temperature and rain amount for the same valid hour.
 - `data/live/live_scores.csv`: the latest scores against ERA5, per horizon (written once there is something to score).
 - `data/live/logger.log`: one status line per run.
+- `data/backtest/`: the frozen 2025 test-year results from the main project (`headline.csv` and hourly `preds_h{1,6,24}.csv` with ERA5 values and forecasts). These are byte-identical copies, published here so the online dashboard can read them while the main repo stays code-only.
 - `data/models/`: the frozen final models, trained on 2011-2024. Re-fitting them reproduces the main project's 2025 test predictions.
 
 ## How to read the results
