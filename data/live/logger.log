@@ -136,3 +136,4 @@ Traceback (most recent call last):
     raise ReadTimeout(e, request=request)
 requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=60)
 
+2026-11-28 10:30Z issue 2026-11-28 10Z: logged 3 rows
